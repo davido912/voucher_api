@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<table name="voucher_payment_hist" schema="raw">
+        <source file="voucher_payment_history.csv"  path="/" header_lines="True" delimiter=","/>
+    <columns>
+        <field name="event_ts" type="TIMESTAMP"/>
+        <field name="country_code" type="VARCHAR" length="100"/>
+        <field name="last_order_ts" type="TIMESTAMP"/>
+        <field name="first_order_ts" type="TIMESTAMP"/>
+        <field name="total_orders" type="FLOAT"/>
+        <field name="voucher_amount" type="FLOAT"/>
+    </columns>
+</table>
