@@ -59,6 +59,7 @@ services:
       PIPELINE_DIR: "/opt/airflow/pipeline"
       TEST_HOME: "/opt/airflow/plugins/tests"
       PYTHONPATH: "/opt/airflow/plugins" # this is for pytest to find relevant testing scope
+      AIRFLOW_CONN_POSTGRES_DB: "postgres://voucher:password@postgres_db/voucher"
     volumes:
       - ../airflow_do/dags:/opt/airflow/dags
       - ../airflow_do/pipeline:/opt/airflow/pipeline
