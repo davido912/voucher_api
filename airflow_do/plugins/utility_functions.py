@@ -38,7 +38,6 @@ def create_path_if_not_exists(path: str) -> str:
     return path
 
 
-# test, what if nothign to remove
 @directory_scope_limit
 def remove_dir_content(path: str) -> None:
     log.info(f"REMOVING PATH {path} AND ALL OF ITS SUBDIRECTORIES")

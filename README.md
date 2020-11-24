@@ -1,5 +1,14 @@
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/david-ohayon-907b85138/)
 # Voucher Selection API
+## Motivation
+This project attempts to show the interplay between different frameworks in the field of data. The tools that are used in this project are:
+* [Apache Airflow](https://airflow.apache.org/) - Job orchestrator that executes workflows
+* [Docker](https://www.docker.com/) - containerisation and standardisation of processes
+* [Postgres](https://www.postgresql.org/) - Database to store data
+
+This project uses Python, SQL and BASH. On top of that, Dockerfiles, docker-compose files, XMLs and some HTML were also 
+written.
+
 ## Problem
 The problem that is dealt with in this project is the analysis of a dataset which includes cleaning and transforming it,
 in order to derive what is the most used voucher value among predefined customer segments.
@@ -17,7 +26,7 @@ The segments are as follows:
 | Recency     | "180+"               | days since last order       |
 
 Due to the fact that the dataset handles entries from 2018, this project assumes to be in a different point in time (2018-09-15).
-This value can be adjusted by changing the `INSERT` Airflow variable.  
+This value can be adjusted by changing the `CUR_DATE` Airflow variable.  
 
 The choice behind using a different timeline is to allow for having results that are more varied in comparison to having all
 customers fall into one category (i.e. recency 180+ days). 
@@ -31,15 +40,6 @@ The dataset was filtered and cleaned according to the following criteria:
 
 Note: entries in the frequent segment were counted in a custom segment `out_of_range`. This
 can be seen in the code and also viewed in the `selection_criteria` API endpoint. 
-
-## Motivation
-This project attempts to show the interplay between different frameworks in the field of data. The tools that are used in this project are:
-* [Apache Airflow](https://airflow.apache.org/) - Job orchestrator that executes workflows
-* [Docker](https://www.docker.com/) - containerisation and standardisation of processes
-* [Postgres](https://www.postgresql.org/) - Database to store data
-
-This project uses Python, SQL and BASH. On top of that, Dockerfiles, docker-compose files, XMLs and some HTML were also 
-written.
 
 
 #### Requirements:
@@ -60,17 +60,48 @@ While being in the root directory execute the following to initialise the projec
 ./quickstart run
 ```
 
-## Project Composition
+### Project Composition
 Airflow is used to execute the pipeline which downloads the relevant data (extraction),
 loads it to a postgres database (part of the containerised setup) and then cleans and models it using SQL.
-Additional models are created that are pertinent to the problem at hand. 
+Additional models are created that are pertinent to the problem at hand.
+
+The database consists of 3 schemas: `raw` (raw untouched data import), `model_staging` (intermediary step) and 
+`model_production` (acts as the last step where the data is served, in this case to the API).
 
 A REST API is connected to the database and provides access to information via the following endpoints:
 * `localhost:5000/selection_criteria` - displays the segmentation
 * `localhost:5000/voucher` - endpoint that accepts requests (curl/ Python requests) and returns a JSON object
 * `localhost:5000/search_voucher` - interface to send post requests to the API
 
+In order to populate the database with the output, run the `voucher_selection` pipeline via Airflow (accessible on `localhost:8080`).
+
 ### Sending a Request to the API
+In order to send a request to the API outside of using the interface endpoint (`localhost:5000/search_voucher`), it is 
+possible to send a curl request, for example:
+```
+curl --header "Content-Type: application/json" \
+  --request POST \
+  --data '{"customer_id": 123,"country_code": "Peru","last_order_ts": "2018-05-03 00:00:00", "first_order_ts": "2017-05-03 00:00:00", "total_orders": 15, "segment_name": "recency_segment"}' \
+  http://localhost:5000/voucher
+```
+Or an alternative would be using the Python requests package:
+```
+import requests
+
+url = 'http://localhost:5000/voucher'
+myobj = {
+    "customer_id": 123,
+    "total_orders": 10,
+    "country_code": "Peru",
+    "last_order_ts": "2018-07-18 00:00:00",
+    "first_order_ts": "2017-05-03 00:00:00",
+    "segment_name": "frequent_segment"
+}
+
+x = requests.post(url, json=myobj)
+
+print(x.text)
+```
 
 
 ## Testing
@@ -91,3 +122,8 @@ secret services (such as Hashicorp Vault, which could be integrated with Airflow
 
 In real world scenario, there could be tools better used for SQL execution and orchestration 
 (such as [DBT](https://www.getdbt.com/)).
+
+## Conclusions
+Analysing the dataset revealed that the voucher value that repeats itself the most
+among customers in Peru is the lowest tier voucher amount (2640). After segmenting the customers
+the same was result was also encountered across all segments (recency and frequent).  
