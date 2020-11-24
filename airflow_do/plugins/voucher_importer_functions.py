@@ -1,6 +1,5 @@
 import wget
 import pandas as pd
-from airflow.hooks.postgres_hook import PostgresHook
 import logging
 from os.path import dirname
 from generators.sql_generators import get_copy_commands
@@ -22,6 +21,9 @@ def download_and_convert_parquet(url: str, dst_path: str) -> None:
 
 
 def load_to_db(table_xml_path: str) -> None:
+    # airflow hooks have some load time to them, so importing this in sync manner
+    # avoids redundant errors to logs and pytests
+    from airflow.hooks.postgres_hook import PostgresHook
     hook = PostgresHook('postgres_db')
     sql_commands = get_copy_commands(table_xml_path)
     for sql in sql_commands:

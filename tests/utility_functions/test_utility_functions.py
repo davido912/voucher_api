@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import MagicMock
-from airflow_do.plugins.utility_functions import remove_dir_content, \
+from utility_functions import remove_dir_content, \
     create_path_if_not_exists
 from os.path import expandvars, dirname, join
 from os import listdir
@@ -13,7 +13,7 @@ TEST_DIR = join(TEMP_DIR, 'testing')
 # create_path_if_not_exists
 def test_create_path_outside_scope(mocker):
     mock = MagicMock()
-    mocker.patch("airflow_do.plugins.utility_functions.Path", mock)
+    mocker.patch("plugins.utility_functions.Path", mock)
     with pytest.raises(ValueError):
         create_path_if_not_exists(dirname(TEMP_DIR))
     mock.assert_not_called()
@@ -34,7 +34,7 @@ def test_create_path_if_not_exists(path):
 # if paths outside of temp folder raise an error
 def test_remove_dir_content_raises(mocker):
     mock = MagicMock()
-    mocker.patch("airflow_do.plugins.utility_functions.shutil.rmtree", mock)
+    mocker.patch("plugins.utility_functions.shutil.rmtree", mock)
     with pytest.raises(ValueError):
         remove_dir_content(dirname(TEMP_DIR))
     mock.assert_not_called()
@@ -43,7 +43,7 @@ def test_remove_dir_content_raises(mocker):
 # think about adding a test for when a path does not exist
 def test_remove_dir_content(mocker):
     mock = MagicMock()
-    mocker.patch("airflow_do.plugins.utility_functions.shutil.rmtree", mock)
+    mocker.patch("plugins.utility_functions.shutil.rmtree", mock)
     remove_dir_content(TEMP_DIR)
     mock.assert_called_once()
 

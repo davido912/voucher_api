@@ -1,0 +1,12 @@
+{% from "_formhelpers.html" import render_field %}
+<form method=post>
+  <dl>
+    {{ render_field(form.customer_id) }}
+    {{ render_field(form.country_code) }}
+    {{ render_field(form.last_order_ts) }}
+    {{ render_field(form.first_order_ts) }}
+    {{ render_field(form.total_orders) }}
+    {{ render_field(form.segment_name) }}
+  </dl>
+  <p><input type=submit value=Send>
+</form>

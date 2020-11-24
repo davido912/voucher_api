@@ -28,6 +28,25 @@ services:
     volumes:
       - airflow-metadb:/var/lib/postgresql/data
 
+
+  voucher_api:
+    image: 78bcfaed1791
+    container_name: voucher_api
+    depends_on:
+      - postgres_db
+    command: python /api_endpoint/voucher_selection_api.py
+    environment:
+      - POSTGRES_USER=voucher
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=voucher
+      - POSTGRES_HOST=postgres_db
+      - POSTGRES_PORT=5432
+    volumes:
+      - ../api_endpoint:/api_endpoint
+    ports:
+      - "5000:5000"
+
+# ADD POSTGRES CONNECTION AS ENV VARIABLE
   airflow-do:
     image: airflow-do:latest
     container_name: airflow
@@ -38,15 +57,17 @@ services:
       AIRFLOW__WEBSERVER__AUTHENTICATE: "False"
       AIRFLOW_TEMP_OUTPUT: "/opt/airflow/temp"
       PIPELINE_DIR: "/opt/airflow/pipeline"
+      TEST_HOME: "/opt/airflow/plugins/tests"
+      PYTHONPATH: "/opt/airflow/plugins" # this is for pytest to find relevant testing scope
     volumes:
       - ../airflow_do/dags:/opt/airflow/dags
       - ../airflow_do/pipeline:/opt/airflow/pipeline
       - ../airflow_do/plugins:/opt/airflow/plugins
       - ./temp:/opt/airflow/temp
+      - ../tests:/opt/airflow/plugins/tests
 
     ports:
       - "8080:8080"
-
 
 
 volumes:

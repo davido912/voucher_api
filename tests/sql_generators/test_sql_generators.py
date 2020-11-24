@@ -1,18 +1,19 @@
 import re
 from unittest.mock import MagicMock
-from airflow_do.plugins.generators.sql_generators import (drop_table_if_exists, create_schema,
+from generators.sql_generators import (drop_table_if_exists, create_schema,
                                                           create_table, copy_query, get_copy_commands)
+from os.path import expandvars, join
 from typing import List
 
 test_schema = "test_schema"
 test_table = "test_table"
-test_file_path = "/test_path"
+test_file_path = "/test_path/test_file.csv"
 
 # expected output sql queries
 expected_drop_table = "DROP TABLE IF EXISTS test_schema.test_table;"
 expected_create_schema = "CREATE SCHEMA IF NOT EXISTS test_schema;"
 expected_create_table = "CREATE TABLE IF NOT EXISTS test_schema.test_table(column1 VARCHAR,column2 VARCHAR(50));"
-expected_copy_query = "COPY test_schema.test_table (column1,column2) FROM '/test_path' DELIMITER ',' CSV HEADER"
+expected_copy_query = "COPY test_schema.test_table (column1,column2) FROM '/test_path/test_file.csv' DELIMITER ',' CSV HEADER"
 
 
 def test_drop_table_if_exists_return():
@@ -54,7 +55,7 @@ def test_copy_query():
 
 
 def test_get_copy_commands():
-    results = get_copy_commands('./test_xml_metadata.xml')
+    results = get_copy_commands(join(expandvars('$TEST_HOME'), 'sql_generators', 'test_xml_metadata.xml'))
     expected = [expected_drop_table, expected_create_schema,
                 expected_create_table,
                 expected_copy_query

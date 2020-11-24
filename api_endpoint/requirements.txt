@@ -1,0 +1,5 @@
+flask
+flask_table
+psycopg2
+flask_restful
+wtforms
