@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<table name="test_table" schema="test_schema">
+        <source file="test_file.csv"  path="/test_path" header="True" delimiter=","/>
+    <columns>
+        <field name="column1" type="VARCHAR"/>
+        <field name="column2" type="VARCHAR" length="50"/>
+    </columns>
+</table>

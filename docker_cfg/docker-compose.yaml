@@ -1,0 +1,55 @@
+version: "3.8"
+services:
+
+  postgres_db:
+    image:  postgres:latest
+    container_name: postgres-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=voucher
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=voucher
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgres-db:/var/lib/postgresql/data
+      - ./temp:/temp
+
+  airflow_metadb:
+    image:  postgres:latest
+    container_name: airflow-postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=airflow
+      - POSTGRES_PASSWORD=airflow
+      - POSTGRES_DB=airflow
+    ports:
+      - "5432:5432"
+    volumes:
+      - airflow-metadb:/var/lib/postgresql/data
+
+  airflow-do:
+    image: airflow-do:latest
+    container_name: airflow
+    depends_on:
+      - airflow_metadb
+    environment:
+      AIRFLOW__WEBSERVER__NAVBAR_COLOR: "#f3e5ab"
+      AIRFLOW__WEBSERVER__AUTHENTICATE: "False"
+      AIRFLOW_TEMP_OUTPUT: "/opt/airflow/temp"
+      PIPELINE_DIR: "/opt/airflow/pipeline"
+    volumes:
+      - ../airflow_do/dags:/opt/airflow/dags
+      - ../airflow_do/pipeline:/opt/airflow/pipeline
+      - ../airflow_do/plugins:/opt/airflow/plugins
+      - ./temp:/opt/airflow/temp
+
+    ports:
+      - "8080:8080"
+
+
+
+volumes:
+  pgres-db:
+  airflow-metadb:
+

@@ -1,2 +1,4 @@
 *.idea
 *.pyc
+docker_cfg/temp*
+*.ipynb

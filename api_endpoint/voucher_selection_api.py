@@ -1,44 +1,53 @@
+"""
+This module represents the API. The API is built to use a Postgres Database in its background to query results from.
+"""
+
 from flask import Flask, render_template, make_response, request
 from flask_restful import Resource, Api
 from pg_connect import PgHook
-from results import SelectionCriteriaTable
+from voucher_segments import SelectionCriteriaTable
 from datetime import datetime
 
 app = Flask(__name__)
 
-args = ['airflow', 'airflow', 'airflow', 'localhost']
+args = ['voucher', 'voucher', 'password', 'localhost', 5433]
 
 
 class SelectionCriteria(Resource):
+    """
+    This endpoint resource is created to give access and better understanding of what are the criteria for the segments
+    and their relevant voucher amounts.
+    """
+
     def get(self):
         headers = {'Content-Type': 'text/html'}  # display GET request as HTML via browser
         hook = PgHook(*args)  # create connection to Postgres database (containerised)
-        data = hook.execute_query('select * from model_staging.segments')
+        data = hook.execute_query('SELECT * FROM model_staging.voucher_segments;')
         table = SelectionCriteriaTable(data)  # create table format
         table.border = True
         # when using flask_restful, make_response is required for applying jinja templating
-        return make_response(render_template('results.html', table=table), 200, headers)
+        return make_response(render_template('voucher_segments.html', table=table), 200, headers)
 
 
 class VoucherSelection(Resource):
-    def post(self):
-        """
+    """
+    Endpoint for a post request to the voucher_segments table, using different dimensions according to the segment chosen
+    When using recency segment, date difference from last order is used.
+    However, when using frequent segment, total orders are used.
+    """
 
-        dimension is the measure we are measuring against (total orders or last order)
-        """
+    def post(self):
         data = request.get_json()
         hook = PgHook(*args)
         query = """
-                    SELECT * FROM model_staging.segments WHERE segment_type='{segment_name}' AND minimum <= {dimension}
+                    SELECT * FROM model_staging.voucher_segments WHERE segment_type='{segment_name}' AND minimum <= {dimension}
                                                             AND (maximum >= {dimension} OR maximum IS NULL) ;
                     """
 
         segment_name = data['segment_name']
         if segment_name == 'recency_segment':
             last_order_ts = data['last_order_ts']
-            # difference between last order time stamp and now
             datediff = abs(datetime.strptime(last_order_ts, '%Y-%m-%d %H:%M:%S') - datetime.now()).days
-            # null maximum for cases where recency above 180
             query = query.format(segment_name=segment_name, dimension=datediff)
 
         # add exception for out of range
@@ -57,6 +66,4 @@ if __name__ == '__main__':
     api = Api(app)
     api.add_resource(SelectionCriteria, '/selection_criteria')
     api.add_resource(VoucherSelection, '/voucher')
-    # api.add_resource(Item, '/item/<string:name>')
-    # api.add_resource(ItemList, '/items')
     app.run(port=5000, debug=True)

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <table name="voucher_payment_hist" schema="raw">
-        <source file="voucher_payment_history.csv"  path="/" header_lines="True" delimiter=","/>
+        <source file="data.parquet.gzip.csv"  path="/temp/voucher_selection" header="True" delimiter=","/>
     <columns>
         <field name="event_ts" type="TIMESTAMP"/>
         <field name="country_code" type="VARCHAR" length="100"/>

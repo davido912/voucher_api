@@ -2,7 +2,7 @@ from flask import Flask, request
 from flask_restful import Resource, Api
 from flask_jwt import JWT, jwt_required
 
-from security_api import auth, identity
+from deprecate.security_api import auth, identity
 
 app = Flask(__name__)
 app.secret_key = "jose"

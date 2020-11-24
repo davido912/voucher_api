@@ -1,5 +1,5 @@
 from werkzeug.security import safe_str_cmp
-from user import User
+from deprecate.user import User
 
 users = [
         User(1, 'bob', 'asdf')
