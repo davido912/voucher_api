@@ -109,6 +109,7 @@ airflow initdb
 # give the database time to initiate
 sleep 3
 
+airflow variables -s CUR_DATE "2018-09-15 00:00:00"
 
 # initiate both the scheduler and the webserver in the same container
 airflow scheduler &

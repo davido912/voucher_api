@@ -30,7 +30,7 @@ services:
 
 
   voucher_api:
-    image: 78bcfaed1791
+    image: david912/flask-postgres-rest:latest
     container_name: voucher_api
     depends_on:
       - postgres_db
@@ -46,9 +46,8 @@ services:
     ports:
       - "5000:5000"
 
-# ADD POSTGRES CONNECTION AS ENV VARIABLE
   airflow-do:
-    image: airflow-do:latest
+    image: david912/airflow-do:latest
     container_name: airflow
     depends_on:
       - airflow_metadb

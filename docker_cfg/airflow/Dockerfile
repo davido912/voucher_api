@@ -11,7 +11,6 @@ USER root
 RUN sudo apt-get update -y -q  \
     && sudo DEBIAN_FRONTEND=noninteractive apt-get upgrade  -y -q \
     && apt-get install -y  --no-install-recommends \
-                unzip \
                 vim \
                 && chown -R airflow: /opt \
                 && chmod a+x /entrypoint \
