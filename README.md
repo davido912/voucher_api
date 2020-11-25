@@ -46,8 +46,8 @@ In order to run this project, Docker needs to be installed and running (on MacOS
 dedicated via Docker preferences). Furthermore,
 ensure that the ports used in the docker-compose are not blocked by other processes you might
 already have running. For example if you have postgres installed and it keeps port 5432 blocked, do close the service.
-##Quickstart
- 
+
+## Quickstart 
 The repository's root directory contains an executable `quickstart`.
 The quickstart executable can be used with 3 different options:
 * `run` - runs docker-compose which spawns all relevant containers. This will print all logs to the current terminal 
