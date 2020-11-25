@@ -41,7 +41,7 @@ services:
       - POSTGRES_DB=voucher
       - POSTGRES_HOST=postgres_db
       - POSTGRES_PORT=5432
-      - CUR_DATE="2018-09-15 00:00:00"
+      - CUR_DATE=2018-09-15 00:00:00
     volumes:
       - ../api_endpoint:/api_endpoint
     ports:

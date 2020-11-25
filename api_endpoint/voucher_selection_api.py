@@ -47,7 +47,7 @@ def api_query(request_data: request):
     segment_name = request_data.get('segment_name')
     if segment_name == 'recency_segment':
         last_order_ts = request_data.get('last_order_ts')
-        # under the assumption that today is the 15th of September 2018
+        # under the assumption that today is the 15th of September 2018 (removing quotes from env variable)
         datediff = abs((datetime.strptime(last_order_ts, '%Y-%m-%d %H:%M:%S') -
                         datetime.strptime(expandvars('$CUR_DATE'), '%Y-%m-%d %H:%M:%S')).days)
         query = query.format(segment_name=segment_name, dimension=datediff)

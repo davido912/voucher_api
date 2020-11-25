@@ -133,7 +133,9 @@ pytest -v -s
 ## Remarks
 It is important to note that all credentials chosen and used in the scope of this project are meant
 to be simple on purpose and security measures were not taken into consideration or use of external
-secret services (such as Hashicorp Vault, which could be integrated with Airflow).
+secret services (such as Hashicorp Vault, which could be integrated with Airflow). The same applies
+for security, permissions and appropriate data warehousing model which were not part of the scope of 
+this project.
 
 In real world scenario, there could be tools better used for SQL execution and orchestration 
 (such as [DBT](https://www.getdbt.com/)). Furthermore, due to the scale of this project, extensive SQL running functions
