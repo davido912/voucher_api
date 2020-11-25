@@ -26,7 +26,7 @@ The segments are as follows:
 | Recency     | "180+"               | days since last order       |
 
 Due to the fact that the dataset handles entries from 2018, this project assumes to be in a different point in time (2018-09-15).
-This value can be adjusted by changing the `CUR_DATE` Airflow variable.  
+This value can be adjusted by changing the `CUR_DATE` environment variable in the docker-compose file (for both Airflow and the API).
 
 The choice behind using a different timeline is to allow for having results that are more varied in comparison to having all
 customers fall into one category (i.e. recency 180+ days). 
@@ -61,6 +61,14 @@ While being in the root directory execute the following to initialise the projec
 ```
 
 ### Project Composition
+This entire project is containerised and runs via Docker. Two custom built images are used
+for the API container and the Airflow container (respectively found in `airflow_cfg` and in the `api_endpoint` directory). 
+The postgres databases use the official image.
+
+The docker-compose file is the entire deployment and it spawns 4 containers in total: Airflow, Postgres (twice, one for
+metadb and one for data warehousing) and containerised REST API application.
+
+
 Airflow is used to execute the pipeline which downloads the relevant data (extraction),
 loads it to a postgres database (part of the containerised setup) and then cleans and models it using SQL.
 Additional models are created that are pertinent to the problem at hand.
@@ -76,26 +84,22 @@ A REST API is connected to the database and provides access to information via t
 In order to populate the database with the output, run the `voucher_selection` pipeline via Airflow (accessible on `localhost:8080`).
 
 ### Sending a Request to the API
+`Note: the request takes specific formats and these would be described in the code sample`
+
 In order to send a request to the API outside of using the interface endpoint (`localhost:5000/search_voucher`), it is 
-possible to send a curl request, for example:
-```
-curl --header "Content-Type: application/json" \
-  --request POST \
-  --data '{"customer_id": 123,"country_code": "Peru","last_order_ts": "2018-05-03 00:00:00", "first_order_ts": "2017-05-03 00:00:00", "total_orders": 15, "segment_name": "recency_segment"}' \
-  http://localhost:5000/voucher
-```
-Or an alternative would be using the Python requests package:
+possible to use the Python requests package:
+
 ```
 import requests
 
 url = 'http://localhost:5000/voucher'
 myobj = {
-    "customer_id": 123,
-    "total_orders": 10,
+    "customer_id": 123, 
+    "total_orders": 10, 
     "country_code": "Peru",
-    "last_order_ts": "2018-07-18 00:00:00",
+    "last_order_ts": "2018-07-18 00:00:00", # %Y-%m-%d %H:%M:%S format
     "first_order_ts": "2017-05-03 00:00:00",
-    "segment_name": "frequent_segment"
+    "segment_name": "frequent_segment" # takes frequent_segment or recency_segment
 }
 
 x = requests.post(url, json=myobj)
@@ -103,6 +107,16 @@ x = requests.post(url, json=myobj)
 print(x.text)
 ```
 
+Or an alternative would be to send a curl request:
+```
+curl --header "Content-Type: application/json" \
+  --request POST \
+  --data '{"customer_id": 123,"country_code": "Peru","last_order_ts": "2018-05-03 00:00:00", "first_order_ts": "2017-05-03 00:00:00", "total_orders": 15, "segment_name": "recency_segment"}' \
+  http://localhost:5000/voucher
+```
+
+
+ 
 
 ## Testing
 This project uses the pytest framework for unittesting. 

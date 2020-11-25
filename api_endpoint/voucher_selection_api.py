@@ -49,7 +49,7 @@ def api_query(request_data: request):
         last_order_ts = request_data.get('last_order_ts')
         # under the assumption that today is the 15th of September 2018
         datediff = abs((datetime.strptime(last_order_ts, '%Y-%m-%d %H:%M:%S') -
-                        datetime.strptime('2018-09-15 00:00:00', '%Y-%m-%d %H:%M:%S')).days)
+                        datetime.strptime(expandvars('$CUR_DATE'), '%Y-%m-%d %H:%M:%S')).days)
         query = query.format(segment_name=segment_name, dimension=datediff)
 
     # add exception for out of range
@@ -89,7 +89,6 @@ class CallAPIForm(Resource):
 
     def post(self):
         return api_query(request.form)
-        # pass
 
 
 if __name__ == '__main__':

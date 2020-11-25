@@ -2,7 +2,7 @@ CREATE SCHEMA IF NOT EXISTS model_production;
 DROP TABLE IF EXISTS model_production.voucher_segmentation;
 CREATE TABLE IF NOT EXISTS model_production.voucher_segmentation AS(
 WITH base AS (
-    SELECT '2018-09-15'::TIMESTAMP AS cur_date,
+    SELECT %s AS cur_date,
            *
     FROM raw.voucher_payment_hist
     WHERE lower(country_code) = 'peru'

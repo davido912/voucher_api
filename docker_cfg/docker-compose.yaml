@@ -41,6 +41,7 @@ services:
       - POSTGRES_DB=voucher
       - POSTGRES_HOST=postgres_db
       - POSTGRES_PORT=5432
+      - CUR_DATE="2018-09-15 00:00:00"
     volumes:
       - ../api_endpoint:/api_endpoint
     ports:
@@ -59,6 +60,7 @@ services:
       TEST_HOME: "/opt/airflow/plugins/tests"
       PYTHONPATH: "/opt/airflow/plugins" # this is for pytest to find relevant testing scope
       AIRFLOW_CONN_POSTGRES_DB: "postgres://voucher:password@postgres_db/voucher"
+      CUR_DATE: "2018-09-15 00:00:00"
     volumes:
       - ../airflow_do/dags:/opt/airflow/dags
       - ../airflow_do/pipeline:/opt/airflow/pipeline
