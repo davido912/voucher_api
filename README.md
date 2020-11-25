@@ -82,7 +82,8 @@ A REST API is connected to the database and provides access to information via t
 * `localhost:5000/voucher` - endpoint that accepts requests (curl/ Python requests) and returns a JSON object
 * `localhost:5000/search_voucher` - interface to send post requests to the API
 
-In order to populate the database with the output, run the `voucher_selection` pipeline via Airflow (accessible on `localhost:8080`).
+In order to populate the database with the output, run the `voucher_selection` pipeline via Airflow (accessible on `localhost:8080`)
+before interacting with the API.
 
 ### Sending a Request to the API
 `Note: the request takes specific formats and these would be described in the code sample`
