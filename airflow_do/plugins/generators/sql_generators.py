@@ -5,18 +5,23 @@ import xml.etree.ElementTree as ET
 
 
 def drop_table_if_exists(schema: str, table: str) -> str:
+    """
+    Returns a custom drop table SQL query
+    """
     return f"DROP TABLE IF EXISTS {schema}.{table};"
 
 
 def create_schema(schema: str) -> str:
+    """
+    Returns a custom create schema SQL query
+    """
     return f"CREATE SCHEMA IF NOT EXISTS {schema};"
 
 
 def create_table(schema: str, table_name: str, columns_metadata: List[ET.Element]) -> str:
     """
-    This function returns a custom CREATE TABLE SQL string according to an XML containing table metadata.
+    Returns a custom create table query
     """
-
     create_table_sql = "CREATE TABLE IF NOT EXISTS {schema}.{table_name}({columns});"
     columns = []
     for column_md in columns_metadata:
@@ -36,6 +41,9 @@ def copy_query(schema: str,
                file_path: str,
                delimiter: str,
                header: bool) -> str:
+    """
+    Returns a custom copy from file query
+    """
     return """COPY {schema}.{table_name} ({columns}) 
     FROM '{file_path}'
     DELIMITER '{delimiter}'
@@ -50,6 +58,10 @@ def copy_query(schema: str,
 
 
 def get_copy_commands(table_xml_path: str) -> List[str]:
+    """
+    Compiles all above functions, parsing an XML metadata to pass relevant parameters and generate table creation
+    and data ingestion
+    """
     table_metadata = parse_xml(table_xml_path)
     table_schema = table_metadata.attrib.get('schema')
     table_name = table_metadata.attrib.get('name')

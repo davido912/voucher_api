@@ -16,7 +16,7 @@ def parse_xml(path: str) -> ET.Element:
 
 def directory_scope_limit(func):
     """
-    prevents creationg of directories outside of temp to isolate processes
+    prevents creation of directories outside of temp to isolate processes
     """
     def wrapped(path):
         if expandvars('$AIRFLOW_TEMP_OUTPUT') not in path:
@@ -28,11 +28,8 @@ def directory_scope_limit(func):
 
 @directory_scope_limit
 def create_path_if_not_exists(path: str) -> str:
-    """ This functions creates directory path if it doesn't exist
-    :param path: Path to create
-    :type path: str
-    :return: The path that was created
-    :rtype: string
+    """
+    This functions creates directory path if it doesn't exist
     """
     Path(path).mkdir(parents=True, exist_ok=True)
     return path

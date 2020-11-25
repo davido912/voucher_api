@@ -43,7 +43,8 @@ can be seen in the code and also viewed in the `selection_criteria` API endpoint
 
 
 #### Requirements:
-In order to run this project, Docker needs to be installed and running. Furthermore,
+In order to run this project, Docker needs to be installed and running (on MacOS, ensure sufficient resources are
+dedicated via Docker preferences). Furthermore,
 ensure that the ports used in the docker-compose are not blocked by other processes you might
 already have running. For example if you have postgres installed and it keeps port 5432 blocked, do close the service. 
 
@@ -135,7 +136,8 @@ to be simple on purpose and security measures were not taken into consideration 
 secret services (such as Hashicorp Vault, which could be integrated with Airflow).
 
 In real world scenario, there could be tools better used for SQL execution and orchestration 
-(such as [DBT](https://www.getdbt.com/)).
+(such as [DBT](https://www.getdbt.com/)). Furthermore, due to the scale of this project, extensive SQL running functions
+weren't specifically written and PostgresOperators were used instead.
 
 ## Conclusion
 Analysing the dataset revealed that the voucher value that repeats itself the most
