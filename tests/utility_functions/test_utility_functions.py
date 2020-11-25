@@ -10,6 +10,13 @@ TEMP_DIR = expandvars('$AIRFLOW_TEMP_OUTPUT')
 TEST_DIR = join(TEMP_DIR, 'testing')
 
 
+# this fixture tears down the created environment after unittests so no testing directly is left behind
+@pytest.fixture
+def cleanUp():
+    yield
+    remove_dir_content(TEST_DIR)
+
+
 # create_path_if_not_exists
 def test_create_path_outside_scope(mocker):
     mock = MagicMock()
@@ -25,14 +32,14 @@ def test_create_path_outside_scope(mocker):
                              TEST_DIR,
                              TEST_DIR]
                          )
-def test_create_path_if_not_exists(path):
+def test_create_path_if_not_exists(path, cleanUp):
     create_path_if_not_exists(path)
     assert path.split('/')[-1] in listdir(TEMP_DIR)  # splitting the path to take just the directory
 
 
 # remove_dir_content, mock is for not actually deleting the folders but checking
 # if paths outside of temp folder raise an error
-def test_remove_dir_content_raises(mocker):
+def test_remove_dir_content_scope(mocker):
     mock = MagicMock()
     mocker.patch("plugins.utility_functions.shutil.rmtree", mock)
     with pytest.raises(ValueError):
@@ -40,7 +47,12 @@ def test_remove_dir_content_raises(mocker):
     mock.assert_not_called()
 
 
-# think about adding a test for when a path does not exist
+# test that FileNotFoundError is raised when path does not exist
+def test_remove_dir_content_path():
+    with pytest.raises(FileNotFoundError):
+        remove_dir_content(join(TEMP_DIR, "path_not_exists"))
+
+
 def test_remove_dir_content(mocker):
     mock = MagicMock()
     mocker.patch("plugins.utility_functions.shutil.rmtree", mock)

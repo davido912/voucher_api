@@ -1,4 +1,4 @@
-from utility_functions import remove_dir_content
+from utility_functions import remove_dir_content, create_path_if_not_exists
 from voucher_importer_functions import download_and_load_to_db
 from os.path import join, expandvars
 from airflow.utils.dates import days_ago
@@ -14,6 +14,7 @@ default_args = {
 
 # set temp output in environment variable
 TEMP_DIR = join(expandvars('$AIRFLOW_TEMP_OUTPUT'), 'voucher_selection')
+create_path_if_not_exists(TEMP_DIR)
 OUTPUT_FNAME = "data.parquet.gzip"
 TABLE_XML = join(expandvars('$PIPELINE_DIR'), 'voucher', 'table_metadata', 'voucher_payment_hist.xml')
 MODELLING_DIR = join(expandvars('$AIRFLOW_HOME'), 'pipeline', 'voucher', 'modelling')

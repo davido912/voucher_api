@@ -15,6 +15,9 @@ class SelectionCriteriaTable(Table):
 
 
 class MakeAPICall(Form):
+    """
+    This object renders a form based endpoint that accepts input and executes a post request
+    """
     customer_id = StringField('customer_id', [validators.DataRequired()])
     country_code = StringField('country_code', [validators.DataRequired()])
     last_order_ts = StringField('last_order_ts', [validators.DataRequired()])

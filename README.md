@@ -61,7 +61,7 @@ While being in the root directory execute the following to initialise the projec
 ```
 
 ### Project Composition
-This entire project is containerised and runs via Docker. Two custom built images are used
+This entire project is containerised and runs via Docker. Two custom built images (hosted on Dockerhu) are used
 for the API container and the Airflow container (respectively found in `airflow_cfg` and in the `api_endpoint` directory). 
 The postgres databases use the official image.
 
@@ -137,7 +137,7 @@ secret services (such as Hashicorp Vault, which could be integrated with Airflow
 In real world scenario, there could be tools better used for SQL execution and orchestration 
 (such as [DBT](https://www.getdbt.com/)).
 
-## Conclusions
+## Conclusion
 Analysing the dataset revealed that the voucher value that repeats itself the most
 among customers in Peru is the lowest tier voucher amount (2640). After segmenting the customers
 the same was result was also encountered across all segments (recency and frequent).  

@@ -10,7 +10,7 @@ log = logging.getLogger(__name__)
 
 def download_and_convert_parquet(url: str, dst_path: str) -> None:
     """
-    downloads to a directory and converts output
+    downloads to a directory and converts output to CSV
     """
     log.info(f"RETRIEVING FILE FROM URL: {url}")
     create_path_if_not_exists(dirname(dst_path))

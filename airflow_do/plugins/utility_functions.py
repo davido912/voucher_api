@@ -45,4 +45,5 @@ def remove_dir_content(path: str) -> None:
         shutil.rmtree(path)
     except FileNotFoundError:
         log.info(f"PATH {path} DOES NOT EXIST")
+        raise
 

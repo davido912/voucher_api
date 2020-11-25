@@ -6,7 +6,7 @@ This module represents the API. The API is built to use a Postgres Database in i
 from flask import Flask, render_template, make_response, request
 from flask_restful import Resource, Api
 from pg_connect import PgHook
-from voucher_segments import SelectionCriteriaTable, MakeAPICall
+from endpoints_rendering import SelectionCriteriaTable, MakeAPICall
 from datetime import datetime
 from os.path import expandvars
 
@@ -52,7 +52,6 @@ def api_query(request_data: request):
                         datetime.strptime(expandvars('$CUR_DATE'), '%Y-%m-%d %H:%M:%S')).days)
         query = query.format(segment_name=segment_name, dimension=datediff)
 
-    # add exception for out of range
     elif segment_name == 'frequent_segment':
         total_orders = request_data.get('total_orders')
         query = query.format(segment_name=segment_name, dimension=total_orders)
